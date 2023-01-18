@@ -1,16 +1,24 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import Deck from "./models/Deck";
+import cors from "cors";
+
 import { config } from "dotenv";
 // env
 config();
 // port number
 const PORT = 5000;
 // app
+
 const app = express();
 // middleware
+app.use(cors());
 app.use(express.json());
 
+app.get("/decks", async (req: Request, res: Response) => {
+  const decks = await Deck.find(); // add search criteria and user selector here
+  res.json(decks);
+});
 app.post("/decks", async (req: Request, res: Response) => {
   console.log(req.body);
 
@@ -19,10 +27,6 @@ app.post("/decks", async (req: Request, res: Response) => {
   });
   const createdDeck = await newDeck.save();
   res.json(createdDeck);
-});
-
-app.get("/hello", (req: Request, res: Response) => {
-  res.send("hhhh");
 });
 
 const db = mongoose.connect(process.env.MONGO_URL!).then(() => {
