@@ -19,6 +19,7 @@ app.get("/decks", async (req: Request, res: Response) => {
   const decks = await Deck.find(); // add search criteria and user selector here
   res.json(decks);
 });
+
 app.post("/decks", async (req: Request, res: Response) => {
   console.log(req.body);
 
@@ -27,6 +28,11 @@ app.post("/decks", async (req: Request, res: Response) => {
   });
   const createdDeck = await newDeck.save();
   res.json(createdDeck);
+});
+
+app.delete("/decks/:deckId", async (req: Request, res: Response) => {
+  const deletedDeck = await Deck.deleteOne({ _id: req.params.deckId });
+  res.json(deletedDeck);
 });
 
 const db = mongoose.connect(process.env.MONGO_URL!).then(() => {
